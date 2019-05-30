@@ -19,4 +19,7 @@ dependencies {
     implementation 'org.springframework.session:spring-session-core'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation('org.springframework.security:spring-security-web') {
+        setTransitive(false)
+    }
 }

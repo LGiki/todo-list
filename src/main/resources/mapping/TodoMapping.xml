@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.lgiki.todolist.mapper.TodoMapper">
+
+    <resultMap id="BaseResultMap" type="cc.lgiki.todolist.entity.Todo">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="is_complete" jdbcType="BOOLEAN" property="isComplete"/>
+    </resultMap>
+
+    <select id="getAll" resultType="cc.lgiki.todolist.entity.Todo">
+        select * from `todo`
+    </select>
+
+</mapper>

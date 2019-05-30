@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://vuejs.org/js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app-4">
+    <ol>
+        <li v-for="todo in todos">
+            {{ todo.text }}
+        </li>
+    </ol>
+</div>
+</body>
+<script>
+    var app4 = new Vue({
+        el: '#app-4',
+        data: {
+            todos:
+                [
+                    {
+                        "id": 1,
+                        "content": "Hello World!",
+                        "complete": false
+                    },
+                    {
+                        "id": 2,
+                        "content": "Nice try",
+                        "complete": false
+                    }
+                ]
+        },
+        mounted() {
+            axios
+                .get('getAll')
+                .then(response = > (this.todos = response))
+        .
+            catch(function (error) { // 请求失败处理
+                console.log(error);
+            });
+        }
+    })
+</script>
+</html>

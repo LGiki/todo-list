@@ -4,6 +4,7 @@ import cc.lgiki.todolist.entity.Todo;
 import cc.lgiki.todolist.service.TodoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,22 +26,10 @@ public class TodoController {
     }
 
     @RequestMapping(value = {"getAll/{page}", "getAll"}, method = RequestMethod.GET)
-    public String getTodo(@PathVariable(required = false) Integer page) {
-        if(page == null) {
+    public List<Todo> getTodo(@PathVariable(required = false) Integer page) {
+        if (page == null) {
             page = 1;
         }
-        List<Todo> result = todoService.getAll(page);
-        if (result != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            String json = "error";
-            try {
-                json = mapper.writeValueAsString(result);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            return json;
-        } else {
-            return "error";
-        }
+        return todoService.getAll(page);
     }
 }

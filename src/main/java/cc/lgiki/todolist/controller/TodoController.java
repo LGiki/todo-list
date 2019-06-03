@@ -1,5 +1,6 @@
 package cc.lgiki.todolist.controller;
 
+import cc.lgiki.todolist.entity.Result;
 import cc.lgiki.todolist.entity.Todo;
 import cc.lgiki.todolist.service.TodoService;
 import com.github.pagehelper.PageHelper;
@@ -14,7 +15,7 @@ import java.util.List;
 public class TodoController {
     @Autowired
     private TodoService todoService;
-    final private int pageNum = 5;
+    final private int pageNum = 6;
 
     @Autowired
     @RequestMapping("/")
@@ -35,19 +36,40 @@ public class TodoController {
     }
 
     @RequestMapping(value = {"/todo"}, method = RequestMethod.POST, produces = "application/json")
-    public int addTodo(@RequestBody Todo todo) {
-        return todoService.insert(todo);
+    public Result addTodo(@RequestBody Todo todo) {
+        int insertResult = todoService.insert(todo);
+        Result result;
+        if(insertResult == 1) {
+            result = new Result(200, "OK");
+        }else{
+            result = new Result(400, "Insert error!");
+        }
+        return result;
     }
 
     @RequestMapping(value = {"/todo/{id}"}, method = RequestMethod.DELETE)
-    public int deleteTodo(@PathVariable int id) {
-        return todoService.delete(id);
+    public Result deleteTodo(@PathVariable int id) {
+        int deleteResult = todoService.delete(id);
+        Result result;
+        if(deleteResult == 1) {
+            result = new Result(200, "OK");
+        }else{
+            result = new Result(400, "Delete error!");
+        }
+        return result;
     }
 
     @RequestMapping(value = {"/todo/{id}"}, method = RequestMethod.PUT, produces = "application/json")
-    public int updateTodo(@PathVariable int id, @RequestBody Todo todo) {
+    public Result updateTodo(@PathVariable int id, @RequestBody Todo todo) {
         todo.setId(id);
-        return todoService.update(todo);
+        int updateResult = todoService.update(todo);
+        Result result;
+        if(updateResult == 1) {
+            result = new Result(200, "OK");
+        }else{
+            result = new Result(400, "Update error!");
+        }
+        return result;
     }
 
 }

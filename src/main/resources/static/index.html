@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Todo List</title>
     <script src="https://lib.baomitu.com/vue/2.6.10/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <link href="https://lib.baomitu.com/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
@@ -31,6 +31,11 @@
             font-size: 3em;
         }
 
+        .list-group-item>a,
+        del {
+            vertical-align: sub;
+        }
+
         .todo-control {
             float: right;
         }
@@ -49,44 +54,54 @@
         <hr>
         <div class="todo" id="todo">
             <ul class="list-group">
-                <li class="list-group-item" v-for="todo in todos">
+                <li class="list-group-item list-group-item-action">
+                    <div class="input-group">
+                        <input type="text" id="todo-content-input" class="form-control" placeholder="New todo..."
+                            aria-label="New todo..." aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-success btn-sm" v-on:click="addTodo()">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item list-group-item-action" v-for="(todo, index) in todos">
                     <del v-if="todo.complete">{{ todo.content }}</del>
                     <a v-else>{{ todo.content }}</a>
                     <div class="todo-control">
-                        <button type="button" class="btn btn-success" v-if="!todo.complete">
+                        <button type="button" class="btn btn-success btn-sm" v-if="!todo.complete">
                             <i class="fas fa-check"></i>
                         </button>
-                        <button type="button" class="btn btn-primary" v-if="!todo.complete">
+                        <button type="button" class="btn btn-primary btn-sm" v-if="!todo.complete">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button type="button" class="btn btn-danger">
+                        <button type="button" class="btn btn-danger btn-sm" v-on:click="removeTodo(index)">
                             <i class="far fa-trash-alt"></i>
                         </button>
                     </div>
                 </li>
             </ul>
         </div>
-        <!-- <div class="pagination"> -->
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1<span class="sr-only">(current)</span></a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        <!-- </div> -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
         <div class="footer">
             <div id="hitokoto"></div>
         </div>
@@ -97,22 +112,66 @@
         el: '#todo',
         data: {
             todos:
-                []
+                [
+
+                ]
+        },
+        methods: {
+            removeTodo: function (index) {
+                let todo = this.todos[index]
+                axios.delete('todo/' + todo.id)
+                    .then((response) => {
+                        let removeResult = response.data;
+                        if (removeResult.code == 200) {
+                            this.todos.splice(index, 1)
+                        } else {
+                            alert(removeResult.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            updateTodo: function () {
+
+            },
+            addTodo: function () {
+                let todoContent = $('#todo-content-input').val();
+                let todo = {
+                    'id': 0,
+                    'content': todoContent,
+                    'complete': false
+                }
+                axios.post('todo/', todo)
+                    .then((response) => {
+                        let addResult = response.data;
+                        if (addResult.code == 200) {
+                            this.todos.unshift(todo);
+                        } else {
+                            alert(addResult.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            },
         },
         mounted() {
-            axios
-                .get('todo/')
+            axios.get('todo/')
                 .then((response) => (this.todos = response.data))
                 .catch(function (error) {
                     console.log(error);
                 })
         }
     });
-    axios.get('https://v1.hitokoto.cn')
-        .then((response) => $('#hitokoto').text(response.data.hitokoto))
-        .catch(function (error) {
-            console.log(error);
-        })
+    $(function () {
+        'use strict';
+        axios.get('https://v1.hitokoto.cn')
+            .then((response) => $('#hitokoto').text(response.data.hitokoto))
+            .catch(function (error) {
+                console.log(error);
+            });
+    })
 </script>
 
 </html>

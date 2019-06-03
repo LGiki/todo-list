@@ -6,6 +6,7 @@
     <title>Title</title>
     <script src="https://lib.baomitu.com/vue/2.6.10/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://lib.baomitu.com/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
     <link href="https://lib.baomitu.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://lib.baomitu.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
@@ -30,7 +31,13 @@
             font-size: 3em;
         }
 
-        .todo {}
+        .todo-control {
+            float: right;
+        }
+
+        .todo {
+            margin: 10px 0px 10px 0px;
+        }
     </style>
 </head>
 
@@ -45,9 +52,41 @@
                 <li class="list-group-item" v-for="todo in todos">
                     <del v-if="todo.complete">{{ todo.content }}</del>
                     <a v-else>{{ todo.content }}</a>
+                    <div class="todo-control">
+                        <button type="button" class="btn btn-success" v-if="!todo.complete">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary" v-if="!todo.complete">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </li>
             </ul>
         </div>
+        <!-- <div class="pagination"> -->
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1<span class="sr-only">(current)</span></a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        <!-- </div> -->
         <div class="footer">
             <div id="hitokoto"></div>
         </div>
@@ -62,7 +101,7 @@
         },
         mounted() {
             axios
-                .get('getAll')
+                .get('todo/')
                 .then((response) => (this.todos = response.data))
                 .catch(function (error) {
                     console.log(error);

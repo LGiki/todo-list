@@ -11,10 +11,23 @@
 
     <select id="getAll" resultMap="todoResultMap">
         select * from `todo`
+        order by `is_complete` asc, `id` desc
     </select>
-    
+
     <insert id="insert" parameterType="cc.lgiki.todolist.entity.Todo" flushCache="true">
-        insert
+        insert into `todo` (`content`, `is_complete`) values (#{content}, #{isComplete})
     </insert>
+
+    <update id="update" parameterType="cc.lgiki.todolist.entity.Todo" flushCache="true">
+        update `todo`
+        set `content` = #{content},
+        `is_complete` = #{isComplete}
+        where `id` = #{id}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        delete from `todo`
+        where `id` = #{id}
+    </delete>
 
 </mapper>

@@ -24,49 +24,54 @@ public class TodoController {
     }
 
     @RequestMapping(value = {"/todo"}, method = RequestMethod.GET)
+    @ResponseBody
     public List<Todo> getTodo() {
         PageHelper.startPage(1, pageNum);
         return todoService.getAll();
     }
 
     @RequestMapping(value = {"/todo/{page}"}, method = RequestMethod.GET)
+    @ResponseBody
     public List<Todo> getTodo(@PathVariable(value = "page") Integer page) {
         PageHelper.startPage(page, pageNum);
         return todoService.getAll();
     }
 
     @RequestMapping(value = {"/todo"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
     public Result addTodo(@RequestBody Todo todo) {
         int insertResult = todoService.insert(todo);
         Result result;
-        if(insertResult == 1) {
-            result = new Result(200, "OK");
-        }else{
+        if (insertResult == 1) {
+            result = new Result(200, "OK", todo);
+        } else {
             result = new Result(400, "Insert error!");
         }
         return result;
     }
 
     @RequestMapping(value = {"/todo/{id}"}, method = RequestMethod.DELETE)
+    @ResponseBody
     public Result deleteTodo(@PathVariable int id) {
         int deleteResult = todoService.delete(id);
         Result result;
-        if(deleteResult == 1) {
+        if (deleteResult == 1) {
             result = new Result(200, "OK");
-        }else{
+        } else {
             result = new Result(400, "Delete error!");
         }
         return result;
     }
 
     @RequestMapping(value = {"/todo/{id}"}, method = RequestMethod.PUT, produces = "application/json")
+    @ResponseBody
     public Result updateTodo(@PathVariable int id, @RequestBody Todo todo) {
         todo.setId(id);
         int updateResult = todoService.update(todo);
         Result result;
-        if(updateResult == 1) {
-            result = new Result(200, "OK");
-        }else{
+        if (updateResult == 1) {
+            result = new Result(200, "OK", todo);
+        } else {
             result = new Result(400, "Update error!");
         }
         return result;

@@ -14,7 +14,12 @@
         order by `is_complete` asc, `id` desc
     </select>
 
-    <insert id="insert" parameterType="cc.lgiki.todolist.entity.Todo" flushCache="true">
+    <select id="get" resultMap="todoResultMap">
+        select * from `todo` where `id` = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cc.lgiki.todolist.entity.Todo" flushCache="true" useGeneratedKeys="true"
+            keyProperty="id">
         insert into `todo` (`content`, `is_complete`) values (#{content}, #{isComplete})
     </insert>
 

@@ -14,6 +14,10 @@ public class TodoService {
     @Autowired
     TodoMapper todoMapper;
 
+    public Todo get(int id) {
+        return todoMapper.get(id);
+    }
+
     public List<Todo> getAll() {
         return todoMapper.getAll();
     }

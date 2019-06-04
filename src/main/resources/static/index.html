@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Todo List</title>
+    <script src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://lib.baomitu.com/vue/2.6.10/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://lib.baomitu.com/axios/0.19.0/axios.min.js"></script>
     <link href="https://lib.baomitu.com/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
     <link href="https://lib.baomitu.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://lib.baomitu.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
     <style type="text/css">
         body {
             background-color: #f6f6f6;
@@ -29,10 +29,10 @@
             color: #69798b;
             text-align: center;
             font-size: 3em;
+            text-shadow: 2px 2px 2px #ccc;
         }
 
-        .list-group-item>a,
-        del {
+        .list-group-item>a {
             vertical-align: sub;
         }
 
@@ -47,7 +47,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <div class="header">
             Todo List
         </div>
@@ -66,16 +66,18 @@
                     </div>
                 </li>
                 <li class="list-group-item list-group-item-action" v-for="(todo, index) in todos">
-                    <del v-if="todo.complete">{{ todo.content }}</del>
+                    <a v-if="todo.complete"><del>{{ todo.content }}</del></a>
                     <a v-else>{{ todo.content }}</a>
                     <div class="todo-control">
-                        <button type="button" class="btn btn-success btn-sm" v-if="!todo.complete">
+                        <button id="complete" type="button" class="btn btn-success btn-sm" v-if="!todo.complete"
+                            v-on:click="completeTodo(index)">
                             <i class="fas fa-check"></i>
                         </button>
-                        <button type="button" class="btn btn-primary btn-sm" v-if="!todo.complete">
+                        <button id="edit" type="button" class="btn btn-primary btn-sm" v-if="!todo.complete"
+                            v-on:click="openTodoEditModal(index)">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button type="button" class="btn btn-danger btn-sm" v-on:click="removeTodo(index)">
+                        <button id="delete" type="button" class="btn btn-danger btn-sm" v-on:click="removeTodo(index)">
                             <i class="far fa-trash-alt"></i>
                         </button>
                     </div>
@@ -105,11 +107,35 @@
         <div class="footer">
             <div id="hitokoto"></div>
         </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input style="display: none" type="number" id="todo-index">
+                        <input class="form-control" type="text" id="todo-content-edit">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button id="update-todo" type="button" class="btn btn-success" v-on:click="updateTodo()">
+                            <i class="fas fa-check"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script>
     var app = new Vue({
-        el: '#todo',
+        el: '#container',
         data: {
             todos:
                 [
@@ -118,12 +144,12 @@
         },
         methods: {
             removeTodo: function (index) {
-                let todo = this.todos[index]
+                let todo = this.todos[index];
                 axios.delete('todo/' + todo.id)
                     .then((response) => {
                         let removeResult = response.data;
-                        if (removeResult.code == 200) {
-                            this.todos.splice(index, 1)
+                        if (removeResult.code === 200) {
+                            this.todos.splice(index, 1);
                         } else {
                             alert(removeResult.message);
                         }
@@ -133,11 +159,48 @@
                     });
             },
             updateTodo: function () {
-
+                let todoIndex = $('#todo-index').val();
+                let todo = this.todos[todoIndex];
+                todo.content = $('#todo-content-edit').val();
+                axios.put('todo/' + todo.id, todo)
+                    .then((response) => {
+                        let updateResult = response.data;
+                        if (updateResult.code === 200) {
+                            this.todos[todoIndex] = updateResult.todo;
+                        } else {
+                            alert(updateResult.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                $('#myModal').modal('toggle');
+            },
+            openTodoEditModal: function (index) {
+                $('#todo-content-edit').val(this.todos[index].content);
+                $('#myModalLabel').text('Edit todo');
+                $('#todo-index').val(index);
+                $('#myModal').modal('toggle');
+            },
+            completeTodo: function (index) {
+                let todo = this.todos[index];
+                todo.complete = true;
+                axios.put('todo/' + todo.id, todo)
+                    .then((response) => {
+                        let completeTodoResult = response.data;
+                        if (completeTodoResult.code === 200) {
+                            this.todos[todoIndex] = completeTodoResult.todo;
+                        } else {
+                            alert(completeTodoResult.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             addTodo: function () {
                 let todoContent = $('#todo-content-input').val();
-                if(todoContent == "") {
+                if (todoContent === "") {
                     alert("Please enter todo content!");
                     return;
                 }
@@ -149,8 +212,8 @@
                 axios.post('todo/', todo)
                     .then((response) => {
                         let addResult = response.data;
-                        if (addResult.code == 200) {
-                            this.todos.unshift(todo);
+                        if (addResult.code === 200) {
+                            this.todos.unshift(addResult.todo);
                         } else {
                             alert(addResult.message);
                         }
@@ -165,7 +228,7 @@
                 .then((response) => (this.todos = response.data))
                 .catch(function (error) {
                     console.log(error);
-                })
+                });
         }
     });
     $(function () {

@@ -87,17 +87,28 @@
         <nav>
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                    <a class="page-link" href="#" aria-label="Previous" v-on:click="switchPage(pages.prePage)">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="#">1<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <template v-for="page in pages.navigatepageNums">
+                    <li class="page-item active" v-if="pages.pageNum == page">
+                        <a class="page-link" href="#">
+                            {{ page }}
+                            <span class="sr-only">
+                                (current)
+                            </span>
+                        </a>
+                    </li>
+                    <li class="page-item" v-else>
+                        <a class="page-link" href="#" v-on:click="switchPage(page)">
+                            {{ page }}
+                        </a>
+                    </li>
+                </template>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+                    <a class="page-link" href="#" aria-label="Next" v-on:click="switchPage(pages.nextPage)">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>
                     </a>
@@ -126,7 +137,6 @@
                         <button id="update-todo" type="button" class="btn btn-success" v-on:click="updateTodo()">
                             <i class="fas fa-check"></i>
                         </button>
-
                     </div>
                 </div>
             </div>
@@ -137,10 +147,10 @@
     var app = new Vue({
         el: '#container',
         data: {
-            todos:
-                [
-
-                ]
+            todos: [],
+            pages: {
+                'pageNum': 1,
+            },
         },
         methods: {
             removeTodo: function (index) {
@@ -222,13 +232,21 @@
                         console.log(error);
                     })
             },
+            switchPage: function(page) {
+                axios.get('todo/' + page)
+                    .then((response) => {
+                        let responseData = response.data;
+                        this.todos = responseData.list;
+                        delete responseData.list;
+                        this.pages = responseData;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         },
         mounted() {
-            axios.get('todo/')
-                .then((response) => (this.todos = response.data))
-                .catch(function (error) {
-                    console.log(error);
-                });
+            this.switchPage(this.pages.pageNum);
         }
     });
     $(function () {

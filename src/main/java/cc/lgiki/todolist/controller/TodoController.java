@@ -4,6 +4,7 @@ import cc.lgiki.todolist.entity.Result;
 import cc.lgiki.todolist.entity.Todo;
 import cc.lgiki.todolist.service.TodoService;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,16 +26,16 @@ public class TodoController {
 
     @RequestMapping(value = {"/todo"}, method = RequestMethod.GET)
     @ResponseBody
-    public List<Todo> getTodo() {
+    public PageInfo<Todo> getTodo() {
         PageHelper.startPage(1, pageNum);
-        return todoService.getAll();
+        return new PageInfo<>(todoService.getAll());
     }
 
     @RequestMapping(value = {"/todo/{page}"}, method = RequestMethod.GET)
     @ResponseBody
-    public List<Todo> getTodo(@PathVariable(value = "page") Integer page) {
+    public PageInfo<Todo> getTodo(@PathVariable(value = "page") Integer page) {
         PageHelper.startPage(page, pageNum);
-        return todoService.getAll();
+        return new PageInfo<>(todoService.getAll());
     }
 
     @RequestMapping(value = {"/todo"}, method = RequestMethod.POST, produces = "application/json")

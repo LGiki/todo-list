@@ -171,7 +171,12 @@
             updateTodo: function () {
                 let todoIndex = $('#todo-index').val();
                 let todo = this.todos[todoIndex];
-                todo.content = $('#todo-content-edit').val();
+                let newTodoContent = $('#todo-content-edit').val();
+                if (newTodoContent == "") {
+                    alert("Todo content can not be empty!");
+                    return;
+                }
+                todo.content = newTodoContent;
                 axios.put('todo/' + todo.id, todo)
                     .then((response) => {
                         let updateResult = response.data;

@@ -137,6 +137,10 @@
             },
             addTodo: function () {
                 let todoContent = $('#todo-content-input').val();
+                if(todoContent == "") {
+                    alert("Please enter todo content!");
+                    return;
+                }
                 let todo = {
                     'id': 0,
                     'content': todoContent,

@@ -19,7 +19,7 @@
         <div class="header">
             Todo List
         </div>
-        <div id="hitokoto"></div>
+        <div class="hitokoto">{{ hitokoto.hitokoto }}</div>
         <hr>
         <div class="todo" id="todo">
             <ul class="list-group">
@@ -55,9 +55,16 @@
                 </li>
             </ul>
         </div>
-        <nav>
+        <nav v-if="todo.pages != 0">
             <ul class="pagination justify-content-center">
-                <li class="page-item">
+                <li class="page-item" v-if="todo.hasPreviousPage">
+                    <a class="page-link" href="#" aria-label="Previous" v-on:click="switchPage(todo.prePage)">
+                        <span aria-hidden="true">&laquo;</span>
+                        <!--<span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>-->
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <li class="page-item disabled" v-else>
                     <a class="page-link" href="#" aria-label="Previous" v-on:click="switchPage(todo.prePage)">
                         <span aria-hidden="true">&laquo;</span>
                         <!--<span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>-->
@@ -79,7 +86,14 @@
                         </a>
                     </li>
                 </template>
-                <li class="page-item">
+                <li class="page-item" v-if="todo.hasNextPage">
+                    <a class="page-link" href="#" aria-label="Next" v-on:click="switchPage(todo.nextPage)">
+                        <span aria-hidden="true">&raquo;</span>
+                        <!--<span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>-->
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+                <li class="page-item disabled" v-else>
                     <a class="page-link" href="#" aria-label="Next" v-on:click="switchPage(todo.nextPage)">
                         <span aria-hidden="true">&raquo;</span>
                         <!--<span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>-->

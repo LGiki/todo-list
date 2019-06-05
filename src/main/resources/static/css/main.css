@@ -7,7 +7,7 @@ del {
     color: #888;
 }
 
-#hitokoto {
+.hitokoto {
     color: #69798b;
     text-align: right;
 }

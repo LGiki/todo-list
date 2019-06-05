@@ -4,6 +4,7 @@ var app = new Vue({
         todo: {
             'pageNum': 1,
         },
+        hitokoto: '',
     },
     methods: {
         removeTodo: function (index) {
@@ -98,17 +99,19 @@ var app = new Vue({
                 .catch(function (error) {
                     console.log(error);
                 });
-        }
+        },
+        freshHitokoto: function () {
+            axios.get('https://v1.hitokoto.cn')
+                .then((response) => {
+                    this.hitokoto = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
     },
     mounted() {
         this.switchPage(this.todo.pageNum);
+        this.freshHitokoto();
     }
-});
-$(function () {
-    'use strict';
-    axios.get('https://v1.hitokoto.cn')
-        .then((response) => $('#hitokoto').text(response.data.hitokoto))
-        .catch(function (error) {
-            console.log(error);
-        });
 });

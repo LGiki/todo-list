@@ -9,7 +9,7 @@ del {
 
 #hitokoto {
     color: #69798b;
-    float: right;
+    text-align: right;
 }
 
 .header {
@@ -19,7 +19,7 @@ del {
     text-shadow: 2px 2px 2px #ccc;
 }
 
-.list-group-item > a {
+.list-group-item>a {
     vertical-align: sub;
 }
 
@@ -29,4 +29,9 @@ del {
 
 .todo {
     margin: 10px 0px 10px 0px;
+}
+
+.copyright {
+    text-align: center;
+    color: #69798b;
 }

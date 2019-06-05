@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Todo List</title>
     <script src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
@@ -33,7 +34,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="list-group-item list-group-item-action" v-for="(todo, index) in todos">
+                <li class="list-group-item list-group-item-action" v-for="(todo, index) in todo.list">
                     <a v-if="todo.complete">
                         <del>{{ todo.content }}</del>
                     </a>
@@ -57,14 +58,14 @@
         <nav>
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous" v-on:click="switchPage(pages.prePage)">
+                    <a class="page-link" href="#" aria-label="Previous" v-on:click="switchPage(todo.prePage)">
                         <span aria-hidden="true">&laquo;</span>
                         <!--<span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>-->
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
-                <template v-for="page in pages.navigatepageNums">
-                    <li class="page-item active" v-if="pages.pageNum == page">
+                <template v-for="page in todo.navigatepageNums">
+                    <li class="page-item active" v-if="todo.pageNum == page">
                         <a class="page-link" href="#">
                             {{ page }}
                             <span class="sr-only">
@@ -79,7 +80,7 @@
                     </li>
                 </template>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next" v-on:click="switchPage(pages.nextPage)">
+                    <a class="page-link" href="#" aria-label="Next" v-on:click="switchPage(todo.nextPage)">
                         <span aria-hidden="true">&raquo;</span>
                         <!--<span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>-->
                         <span class="sr-only">Next</span>

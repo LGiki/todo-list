@@ -1,19 +1,18 @@
 var app = new Vue({
     el: '#container',
     data: {
-        todos: [],
-        pages: {
+        todo: {
             'pageNum': 1,
         },
     },
     methods: {
         removeTodo: function (index) {
-            let todo = this.todos[index];
+            let todo = this.todo.list[index];
             axios.delete('todo/' + todo.id)
                 .then((response) => {
                     let removeResult = response.data;
                     if (removeResult.code === 200) {
-                        this.todos.splice(index, 1);
+                        this.todo.list.splice(index, 1);
                     } else {
                         alert(removeResult.message);
                     }
@@ -24,7 +23,7 @@ var app = new Vue({
         },
         updateTodo: function () {
             let todoIndex = $('#todo-index').val();
-            let todo = this.todos[todoIndex];
+            let todo = this.todo.list[todoIndex];
             let newTodoContent = $('#todo-content-edit').val();
             if (newTodoContent == "") {
                 alert("Todo content can not be empty!");
@@ -35,7 +34,7 @@ var app = new Vue({
                 .then((response) => {
                     let updateResult = response.data;
                     if (updateResult.code === 200) {
-                        this.todos[todoIndex] = updateResult.todo;
+                        this.todo.list[todoIndex] = updateResult.todo;
                     } else {
                         alert(updateResult.message);
                     }
@@ -46,19 +45,19 @@ var app = new Vue({
             $('#myModal').modal('toggle');
         },
         openTodoEditModal: function (index) {
-            $('#todo-content-edit').val(this.todos[index].content);
+            $('#todo-content-edit').val(this.todo.list[index].content);
             $('#myModalLabel').text('Edit todo');
             $('#todo-index').val(index);
             $('#myModal').modal('toggle');
         },
         completeTodo: function (index) {
-            let todo = this.todos[index];
+            let todo = this.todo.list[index];
             todo.complete = true;
             axios.put('todo/' + todo.id, todo)
                 .then((response) => {
                     let completeTodoResult = response.data;
                     if (completeTodoResult.code === 200) {
-                        this.todos[todoIndex] = completeTodoResult.todo;
+                        this.todo.list[todoIndex] = completeTodoResult.todo;
                     } else {
                         alert(completeTodoResult.message);
                     }
@@ -82,7 +81,7 @@ var app = new Vue({
                 .then((response) => {
                     let addResult = response.data;
                     if (addResult.code === 200) {
-                        this.todos.unshift(addResult.todo);
+                        this.todo.list.unshift(addResult.todo);
                     } else {
                         alert(addResult.message);
                     }
@@ -94,10 +93,7 @@ var app = new Vue({
         switchPage: function (page) {
             axios.get('todo/' + page)
                 .then((response) => {
-                    let responseData = response.data;
-                    this.todos = responseData.list;
-                    delete responseData.list;
-                    this.pages = responseData;
+                    this.todo = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -105,7 +101,7 @@ var app = new Vue({
         }
     },
     mounted() {
-        this.switchPage(this.pages.pageNum);
+        this.switchPage(this.todo.pageNum);
     }
 });
 $(function () {

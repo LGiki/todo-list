@@ -1,7 +1,6 @@
 package cc.lgiki.todolist.mapper;
 
 import cc.lgiki.todolist.entity.Todo;
-import com.github.pagehelper.Page;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

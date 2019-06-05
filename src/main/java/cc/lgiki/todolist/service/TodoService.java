@@ -2,8 +2,6 @@ package cc.lgiki.todolist.service;
 
 import cc.lgiki.todolist.entity.Todo;
 import cc.lgiki.todolist.mapper.TodoMapper;
-import com.github.pagehelper.Page;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

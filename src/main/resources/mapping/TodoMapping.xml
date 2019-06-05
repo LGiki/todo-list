@@ -10,28 +10,33 @@
     </resultMap>
 
     <select id="getAll" resultMap="todoResultMap">
-        select * from `todo`
+        select *
+        from `todo`
         order by `is_complete` asc, `id` desc
     </select>
 
     <select id="get" resultMap="todoResultMap">
-        select * from `todo` where `id` = #{id}
+        select *
+        from `todo`
+        where `id` = #{id}
     </select>
 
     <insert id="insert" parameterType="cc.lgiki.todolist.entity.Todo" flushCache="true" useGeneratedKeys="true"
             keyProperty="id">
-        insert into `todo` (`content`, `is_complete`) values (#{content}, #{isComplete})
+        insert into `todo` (`content`, `is_complete`)
+        values (#{content}, #{isComplete})
     </insert>
 
     <update id="update" parameterType="cc.lgiki.todolist.entity.Todo" flushCache="true">
         update `todo`
-        set `content` = #{content},
-        `is_complete` = #{isComplete}
+        set `content`     = #{content},
+            `is_complete` = #{isComplete}
         where `id` = #{id}
     </update>
 
     <delete id="delete" flushCache="true">
-        delete from `todo`
+        delete
+        from `todo`
         where `id` = #{id}
     </delete>
 

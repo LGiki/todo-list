@@ -1,0 +1,32 @@
+body {
+    background-color: #f6f6f6;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1);
+}
+
+del {
+    color: #888;
+}
+
+#hitokoto {
+    color: #69798b;
+    float: right;
+}
+
+.header {
+    color: #69798b;
+    text-align: center;
+    font-size: 3em;
+    text-shadow: 2px 2px 2px #ccc;
+}
+
+.list-group-item > a {
+    vertical-align: sub;
+}
+
+.todo-control {
+    float: right;
+}
+
+.todo {
+    margin: 10px 0px 10px 0px;
+}

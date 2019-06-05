@@ -7,43 +7,10 @@
     <script src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://lib.baomitu.com/vue/2.6.10/vue.js"></script>
     <script src="https://lib.baomitu.com/axios/0.19.0/axios.min.js"></script>
+    <script src="https://lib.baomitu.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link href="https://lib.baomitu.com/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
     <link href="https://lib.baomitu.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://lib.baomitu.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <style type="text/css">
-        body {
-            background-color: #f6f6f6;
-            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1);
-        }
-
-        del {
-            color: #888;
-        }
-
-        #hitokoto {
-            color: #69798b;
-            float: right;
-        }
-
-        .header {
-            color: #69798b;
-            text-align: center;
-            font-size: 3em;
-            text-shadow: 2px 2px 2px #ccc;
-        }
-
-        .list-group-item>a {
-            vertical-align: sub;
-        }
-
-        .todo-control {
-            float: right;
-        }
-
-        .todo {
-            margin: 10px 0px 10px 0px;
-        }
-    </style>
+    <link href="css/main.css" rel="stylesheet">
 </head>
 
 <body>
@@ -89,6 +56,7 @@
                 <li class="page-item">
                     <a class="page-link" href="#" aria-label="Previous" v-on:click="switchPage(pages.prePage)">
                         <span aria-hidden="true">&laquo;</span>
+                        <!--<span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>-->
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
@@ -110,6 +78,7 @@
                 <li class="page-item">
                     <a class="page-link" href="#" aria-label="Next" v-on:click="switchPage(pages.nextPage)">
                         <span aria-hidden="true">&raquo;</span>
+                        <!--<span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>-->
                         <span class="sr-only">Next</span>
                     </a>
                 </li>
@@ -143,125 +112,5 @@
         </div>
     </div>
 </body>
-<script>
-    var app = new Vue({
-        el: '#container',
-        data: {
-            todos: [],
-            pages: {
-                'pageNum': 1,
-            },
-        },
-        methods: {
-            removeTodo: function (index) {
-                let todo = this.todos[index];
-                axios.delete('todo/' + todo.id)
-                    .then((response) => {
-                        let removeResult = response.data;
-                        if (removeResult.code === 200) {
-                            this.todos.splice(index, 1);
-                        } else {
-                            alert(removeResult.message);
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
-            updateTodo: function () {
-                let todoIndex = $('#todo-index').val();
-                let todo = this.todos[todoIndex];
-                let newTodoContent = $('#todo-content-edit').val();
-                if (newTodoContent == "") {
-                    alert("Todo content can not be empty!");
-                    return;
-                }
-                todo.content = newTodoContent;
-                axios.put('todo/' + todo.id, todo)
-                    .then((response) => {
-                        let updateResult = response.data;
-                        if (updateResult.code === 200) {
-                            this.todos[todoIndex] = updateResult.todo;
-                        } else {
-                            alert(updateResult.message);
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                $('#myModal').modal('toggle');
-            },
-            openTodoEditModal: function (index) {
-                $('#todo-content-edit').val(this.todos[index].content);
-                $('#myModalLabel').text('Edit todo');
-                $('#todo-index').val(index);
-                $('#myModal').modal('toggle');
-            },
-            completeTodo: function (index) {
-                let todo = this.todos[index];
-                todo.complete = true;
-                axios.put('todo/' + todo.id, todo)
-                    .then((response) => {
-                        let completeTodoResult = response.data;
-                        if (completeTodoResult.code === 200) {
-                            this.todos[todoIndex] = completeTodoResult.todo;
-                        } else {
-                            alert(completeTodoResult.message);
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
-            addTodo: function () {
-                let todoContent = $('#todo-content-input').val();
-                if (todoContent === "") {
-                    alert("Please enter todo content!");
-                    return;
-                }
-                let todo = {
-                    'id': 0,
-                    'content': todoContent,
-                    'complete': false
-                }
-                axios.post('todo/', todo)
-                    .then((response) => {
-                        let addResult = response.data;
-                        if (addResult.code === 200) {
-                            this.todos.unshift(addResult.todo);
-                        } else {
-                            alert(addResult.message);
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-            },
-            switchPage: function(page) {
-                axios.get('todo/' + page)
-                    .then((response) => {
-                        let responseData = response.data;
-                        this.todos = responseData.list;
-                        delete responseData.list;
-                        this.pages = responseData;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
-        },
-        mounted() {
-            this.switchPage(this.pages.pageNum);
-        }
-    });
-    $(function () {
-        'use strict';
-        axios.get('https://v1.hitokoto.cn')
-            .then((response) => $('#hitokoto').text(response.data.hitokoto))
-            .catch(function (error) {
-                console.log(error);
-            });
-    })
-</script>
-
+<script src="js/main.js"></script>
 </html>

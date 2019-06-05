@@ -13,7 +13,8 @@ var app = new Vue({
                 .then((response) => {
                     let removeResult = response.data;
                     if (removeResult.code === 200) {
-                        this.todo.list.splice(index, 1);
+                        // this.todo.list.splice(index, 1);
+                        this.switchPage(this.todo.pageNum);
                     } else {
                         alert(removeResult.message);
                     }
@@ -58,7 +59,8 @@ var app = new Vue({
                 .then((response) => {
                     let completeTodoResult = response.data;
                     if (completeTodoResult.code === 200) {
-                        this.todo.list[todoIndex] = completeTodoResult.todo;
+                        // this.todo.list[index] = completeTodoResult.todo;
+                        this.switchPage(this.todo.pageNum);
                     } else {
                         alert(completeTodoResult.message);
                     }
@@ -82,7 +84,8 @@ var app = new Vue({
                 .then((response) => {
                     let addResult = response.data;
                     if (addResult.code === 200) {
-                        this.todo.list.unshift(addResult.todo);
+                        // this.todo.list.unshift(addResult.todo);
+                        this.switchPage(this.todo.pageNum);
                     } else {
                         alert(addResult.message);
                     }

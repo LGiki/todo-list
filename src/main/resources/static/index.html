@@ -26,7 +26,7 @@
                 <li class="list-group-item list-group-item-action">
                     <div class="input-group">
                         <input type="text" id="todo-content-input" class="form-control" placeholder="New todo..."
-                            aria-label="New todo..." aria-describedby="basic-addon2">
+                            aria-label="New todo..." aria-describedby="basic-addon2" @keyup.enter="addTodo()">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-success btn-sm" v-on:click="addTodo()">
                                 <i class="fas fa-check"></i>
@@ -115,7 +115,7 @@
                     </div>
                     <div class="modal-body">
                         <input style="display: none" type="number" id="todo-index">
-                        <input class="form-control" type="text" id="todo-content-edit">
+                        <input class="form-control" type="text" id="todo-content-edit" @keyup.enter="updateTodo()">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
